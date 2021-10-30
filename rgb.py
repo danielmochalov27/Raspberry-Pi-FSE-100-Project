@@ -1,13 +1,1 @@
-import RPi.GPIO as GPIO #Raspberry Pi GPIO library
-from time import sleep, time
-
-#Initialization:
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
-
-RgbPin = 13
-
-def setup():
-  GPIO.setup(RgbPin,GPIO.IN)
-
-  
+https://docs.google.com/presentation/d/1oA8chO1H0VVCVqFzmaP5BDx-msCuDT8vsy9KDV2I2W8/edit#slide=id.gea25d1251d_2_20

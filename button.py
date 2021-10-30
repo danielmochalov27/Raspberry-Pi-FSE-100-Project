@@ -86,7 +86,7 @@ while True:
     print("ultrasonic_ir_reader")
     ultra_ir_list = ultra_ir_distance()
     if(ultra_ir_list[0] < 1):
-      print("ultransonic sensor detected")
+      print("ultrasonic sensor detected")
       PBuzzBeep(0.5)
     if(ultra_ir_list[1] == 1):
       print("ir sensor detected")
