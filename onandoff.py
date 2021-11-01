@@ -5,11 +5,11 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
 BtnPin = 40
-PIRPin = 36
+PIRPin = 38
 PBuzzPin = 22
-PBuzzPin2 = 35
-UltraTrig = 16
-UltraEcho = 12
+PBuzzPin2 = 16
+UltraTrig = 35
+UltraEcho = 32
 
 BtnOn = False
 
@@ -87,7 +87,7 @@ while True:
         time.sleep(0.2)
 
     print ("plz")
-    while GPIO.input(BtnPin == 1):
+    while GPIO.input(BtnPin) == 1:
 
       freq = beep_freq()
       # No beeping
