@@ -11,25 +11,38 @@ PBuzzPin2 = 16
 UltraTrig = 35
 UltraEcho = 32
 
-BtnOn = False
-
-GPIO.setup(BtnPin, GPIO.IN)  #button
+GPIO.setup(BtnPin, GPIO.IN)
+#Button is connected to pin 40
 
 GPIO.setup(PBuzzPin, GPIO.OUT)
 #Buzzer is connected to Pin 22
 
 GPIO.setup(PBuzzPin2, GPIO.OUT)
-#Buzzer is connected to Pin 23
+#Buzzer 2is connected to Pin 16
 
 GPIO.setup(PIRPin, GPIO.IN)
-#PIR sensor conected to Pin 32
+#PIR sensor conected to Pin 38
 
 GPIO.setup(UltraEcho, GPIO.IN)
-#Ultra Sonic Sensor input is connected to Pin 18
+#Ultra Sonic Sensor input is connected to Pin 32
 
 GPIO.setup(UltraTrig, GPIO.OUT)
-#Ultra Sonic Sensor output is connected to Pin 16
+#Ultra Sonic Sensor output is connected to Pin 35
 
+def pir_motion(PIRPin):
+  print("pir motion detected")
+
+  Buzz = GPIO.PWM(16, 440)
+  Buzz.start(0)
+  Buzz.ChangeDutyCycle(50)
+  time.sleep(1)
+  Buzz.stop()
+
+  GPIO.output(16, 1)
+  time.sleep(2.0)
+  GPIO.output(16, 0)
+
+GPIO.add_event_detect(PIRPin, GPIO.RISING, callback = pir_motion)
 
 def ultra_ir_distance():
  GPIO.output(UltraTrig, True)
@@ -46,57 +59,39 @@ def ultra_ir_distance():
    endTime = time.time()
  
  during = endTime - startTime
- ultra_distance = (during * 340)/2
- 
- pir_sense = 0
+ ultra_distance = during*17150
+ ultra_distance = round(ultra_distance, 2)
 
- if GPIO.input(PIRPin):
-  pir_sense = 1
- else:
-  pir_sense = 0
-
- ultra_ir_sense = [ultra_distance, pir_sense]
- return ultra_ir_sense
+ return ultra_distance
 
   # Calculates the frequency of beeping depending on the measured distance
 def beep_freq():
   # Measure the distance
-  ultra_ir_list = ultra_ir_distance()
-  # If the distance is bigger than 50cm, we will not beep at all
-  if ultra_ir_list[0] > 50:
+  ultra_distance = ultra_ir_distance()
+  # If the distance is bigger than 200cm, we will not beep at all
+  if ultra_distance > 200:
     return -1
-  # If the distance is between 50 and 30 cm, we will beep once a second
-  elif ultra_ir_list[0] <= 50 and ultra_ir_list[0] >=30:
+  # If the distance is between 200 and 120 cm, we will beep once a second
+  elif ultra_distance <= 200 and ultra_distance >= 120:
     return 1
-  # If the distance is between 30 and 20 cm, we will beep every twice a second
-  elif ultra_ir_list[0] < 30 and ultra_ir_list[0] >= 20:
+  # If the distance is between 120 and 80 cm, we will beep every twice a second
+  elif ultra_distance < 120 and ultra_distance >= 80:
     return 0.5
-  # If the distance is between 20 and 10 cm, we will beep four times a second
-  elif ultra_ir_list[0] < 20 and ultra_ir_list[0] >= 10:
+  # If the distance is between 80 and 40 cm, we will beep four times a second
+  elif ultra_distance < 80 and ultra_distance >= 40:
     return 0.25
-  # If the distance is smaller than 10 cm, we will beep constantly
+  # If the distance is smaller than 40 cm, we will beep constantly
   else:
     return 0
 
-def PBuzzBeep2(x):
-  GPIO.output(PBuzzPin2, GPIO.LOW)
-  time.sleep(x)
-  GPIO.output(PBuzzPin2, GPIO.HIGH)
-
 while True:
     # waiting for button press
+    print("Sensors OFF")
     while GPIO.input(BtnPin) == 1:
      time.sleep(0.2)
 
     print ("Sensors ON")
     while GPIO.input(BtnPin) == 1:
-    
-      ultra_ir_list = ultra_ir_distance()
-      pir_sense1 = ultra_ir_list[1]
-
-      if ultra_ir_list[1] == 1:
-        PBuzzBeep2(0.5)
-        print("pir detected")
 
       freq = beep_freq()
       # No beeping
@@ -109,12 +104,11 @@ while True:
       elif freq == 0:
         GPIO.output(PBuzzPin, True)
         time.sleep(0.25)
-        print("ultra detected far")
+        print("ultra detected close")
         # Beeping on certain frequency
       else:
         GPIO.output(PBuzzPin, True)
         time.sleep(0.2) # Beep is 0.2 seconds long
         GPIO.output(PBuzzPin, False)
         time.sleep(freq) # Pause between beeps = beeping frequency
-        print("ultra detected")
-      print("Sensors OFF")
+        print("ultra detected")  
