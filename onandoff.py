@@ -90,6 +90,8 @@ while True:
     while GPIO.input(BtnPin) == 1:
      time.sleep(0.2)
 
+    time.sleep(0.2)
+    
     print ("Sensors ON")
     while GPIO.input(BtnPin) == 1:
 
