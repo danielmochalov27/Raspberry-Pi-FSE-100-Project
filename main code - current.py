@@ -1,9 +1,10 @@
-import RPi.GPIO as GPIO
-import time
+import RPi.GPIO as GPIO #makes sure you can interact with the pins on the pi
+import time #counts
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
+#sets up all the pins for the sensors
 BtnPin = 40
 PIRPin = 38
 PBuzzPin = 22
@@ -29,6 +30,7 @@ GPIO.setup(UltraEcho, GPIO.IN)
 GPIO.setup(UltraTrig, GPIO.OUT)
 #Ultra Sonic Sensor output is connected to Pin 35
 
+#this code is for the PIR sensors (motion sensor) when it detects motion it beeps with one type of tone
 def pir_motion(PIRPin):
   print("pir motion detected")
 
@@ -43,7 +45,8 @@ def pir_motion(PIRPin):
   GPIO.output(16, 0)
 
 GPIO.add_event_detect(PIRPin, GPIO.RISING, callback = pir_motion)
-
+#
+#This code is for the ultrasonic sensor (distance sensor) sensor will click faster and faster as you get closer to something
 def ultra_ir_distance():
  GPIO.output(UltraTrig, True)
  time.sleep(0.00001)
